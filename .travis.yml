@@ -1,0 +1,16 @@
+language: generic 
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t hoier14/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true hoier14/react-test npm test
+
+after_success:
+  - docker build -t hoier14/multi-client ./client
+  - docker build -t hoier14/multi-nginx ./nginx
+  - docker build -t hoier14/multi-server ./server
+  - docker build -t hoier14/multi-worker ./worker
